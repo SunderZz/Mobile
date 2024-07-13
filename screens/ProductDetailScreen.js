@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity, ActivityIndicator, Linking } from "react-native";
 import { getProductDetail } from "../services/api";
 
 const ProductDetailScreen = ({ route, navigation }) => {
@@ -22,6 +22,11 @@ const ProductDetailScreen = ({ route, navigation }) => {
     }
   };
 
+  const openProductLink = () => {
+    const url = `http://localhost:5173/#/ProductDetail/${productId}`;
+    Linking.openURL(url);
+  };
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -40,7 +45,9 @@ const ProductDetailScreen = ({ route, navigation }) => {
         source={require("../assets/default_product.png")}
         style={styles.productImage}
       />
-      <Text style={styles.productName}>{product.Name}</Text>
+      <TouchableOpacity onPress={openProductLink}>
+        <Text style={styles.productName}>{product.Name}</Text>
+      </TouchableOpacity>
       {product.Description && (
         <Text style={styles.productDescription}>{product.Description}</Text>
       )}
@@ -81,6 +88,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 8,
+    color: "#6200ea",
   },
   productDescription: {
     fontSize: 16,
