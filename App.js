@@ -1,20 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import HomeScreen from "./screens/HomeScreen";
+import ShopScreen from "./screens/ShopScreen";
+import ProductDetailScreen from "./screens/ProductDetailScreen";
+import { Text, TouchableOpacity } from "react-native";
+
+const Stack = createStackNavigator();
+
+const CustomHeaderBack = ({ navigation }) => (
+  <TouchableOpacity
+    style={{ flexDirection: "row", alignItems: "center" }}
+    onPress={() => navigation.goBack()}
+  >
+    <Text style={{ marginLeft: 8 }}>← Retour au marché</Text>
+  </TouchableOpacity>
+);
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Shop"
+          component={ShopScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ProductDetail"
+          component={ProductDetailScreen}
+          options={({ navigation }) => ({
+            headerLeft: () => <CustomHeaderBack navigation={navigation} />,
+            headerTitle: "",
+          })}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
