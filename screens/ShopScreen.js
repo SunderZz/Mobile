@@ -17,7 +17,6 @@ import { getProducts } from "../services/api";
 const ShopScreen = ({ navigation }) => {
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filter, setFilter] = useState("");
   const [sortOption, setSortOption] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -28,10 +27,10 @@ const ShopScreen = ({ navigation }) => {
   const fetchProducts = async () => {
     try {
       const data = await getProducts(searchQuery);
-      let filteredProducts = data;
+      let filteredProducts = data.filter(product => product.Active);
 
       if (searchQuery.length >= 2) {
-        filteredProducts = data.filter(
+        filteredProducts = filteredProducts.filter(
           (product) =>
             product &&
             product.Name &&
