@@ -54,7 +54,6 @@ const ShopScreen = ({ navigation }) => {
       setErrorMessage(
         "Erreurs lors de la Récupération des produits: " + error.message
       );
-      console.error("Erreur lors de la Récupération des produits:", error);
     }
   };
 
@@ -116,7 +115,7 @@ const ShopScreen = ({ navigation }) => {
           data={products}
           renderItem={renderItem}
           keyExtractor={(item) => item.Id_Product.toString()}
-          onScroll={(event) => {}}
+          ListFooterComponent={<View style={styles.footer} />}
         />
       ) : (
         <Text style={styles.noResults}>Produit non trouvé.</Text>
@@ -195,6 +194,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 18,
     color: "#999",
+  },
+  footer: {
+    height: 50,
   },
 });
 
