@@ -14,6 +14,7 @@ import {
   getProductDetail,
   getProductReviews,
   getProducerName,
+  getProductImage,
 } from "../services/api";
 
 const ProductDetailScreen = ({ route, navigation }) => {
@@ -31,7 +32,8 @@ const ProductDetailScreen = ({ route, navigation }) => {
   const fetchProductDetail = async () => {
     try {
       const productData = await getProductDetail(productId);
-      setProduct(productData);
+      const imageUrl = await getProductImage(productId);
+      setProduct({ ...productData, imageUrl });
 
       const reviewsData = await getProductReviews(productId);
       setReviews(reviewsData || []);
@@ -61,7 +63,7 @@ const ProductDetailScreen = ({ route, navigation }) => {
   const renderHeader = () => (
     <View>
       <Image
-        source={require("../assets/default_product.png")}
+        source={{ uri: product.imageUrl || "https://via.placeholder.com/300" }}
         style={styles.productImage}
       />
       <TouchableOpacity onPress={openProductLink}>
@@ -70,7 +72,7 @@ const ProductDetailScreen = ({ route, navigation }) => {
       {product.Description && (
         <Text style={styles.productDescription}>{product.Description}</Text>
       )}
-      <Text style={styles.productPrice}>Price: {product.Price_ht} €</Text>
+      <Text style={styles.productPrice}>Prix: {product.Price_ht} €</Text>
       {product.Discount !== null && product.Discount > 0 && (
         <Text style={styles.productDiscount}>
           Promotion: {product.Discount}%

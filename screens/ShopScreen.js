@@ -12,7 +12,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { getProducts } from "../services/api";
+import { getProducts, getProductImage } from "../services/api";
 
 const ShopScreen = ({ navigation }) => {
   const [products, setProducts] = useState([]);
@@ -26,8 +26,8 @@ const ShopScreen = ({ navigation }) => {
 
   const fetchProducts = async () => {
     try {
-      const data = await getProducts(searchQuery);
-      let filteredProducts = data.filter(product => product.Active);
+      const data = await getProducts();
+      let filteredProducts = data.filter((product) => product.Active);
 
       if (searchQuery.length >= 2) {
         filteredProducts = filteredProducts.filter(
@@ -48,7 +48,14 @@ const ShopScreen = ({ navigation }) => {
         );
       }
 
-      setProducts(filteredProducts);
+      const productsWithImages = await Promise.all(
+        filteredProducts.map(async (product) => {
+          const imageUrl = await getProductImage(product.Id_Product);
+          return { ...product, imageUrl };
+        })
+      );
+
+      setProducts(productsWithImages);
     } catch (error) {
       setErrorMessage(
         "Erreurs lors de la Récupération des produits: " + error.message
@@ -70,7 +77,7 @@ const ShopScreen = ({ navigation }) => {
       onPress={() => handleProductPress(item.Id_Product)}
     >
       <Image
-        source={require("../assets/default_product.png")}
+        source={{ uri: item.imageUrl || "https://via.placeholder.com/300" }}
         style={styles.productImage}
       />
       <View style={styles.productInfo}>
